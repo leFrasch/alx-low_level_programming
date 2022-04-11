@@ -1,50 +1,80 @@
+#include <stdio.h>
 #include "dog.h"
 #include <stdlib.h>
 /**
- * _strlen - measures the length of a string.
- * Descritpion: measures the string s.
- * @s: string to be messured/
- * Return: returns length of s.
+ * _strlen - returns the length of a string
+ *
+ * @s: string to check length
+ * Return: returns the length of string
  */
 int _strlen(char *s)
 {
-	int count;
+	int i;
 
-	count = 0;
-	while (s[count] != '\0')
-	{
-		count++;
-	}
-	return (count);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	i++;
+	return (i);
 }
+
 /**
- * new_dog - makes a new inits the dog structure
- * @name: name of the dog
- * @age: age of the dog
- * @owner: owner of the dog
- * Return: dog_t else NULL.
+ * _strcpy - copies an entire string to another
+ *
+ * @src: source string
+ * @dest: destination buffer
+ * Return: returns pointer to copied string
+ */
+
+char *_strcpy(char *dest, char *src)
+{
+	int i, length = _strlen(src);
+	char *retString;
+
+	for (i = 0 ; i <= length ; i++)
+	{
+		dest[i] = src[i];
+	}
+	retString = dest;
+	return (retString);
+}
+
+/**
+ * new_dog - creates a new dog structure
+ *
+ * @name: name of dog
+ * @age: age of dog
+ * @owner: dog's owner
+ * Return: returns pointer to the new dog structure
  */
 dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *temp;
-	int count;
+	dog_t *dog_copy;
 
-	temp = malloc(sizeof(dog_t));
-	if (temp == NULL)
+	dog_copy = malloc(sizeof(dog_t));
+	if (dog_copy)
 	{
-		return (NULL);
+		dog_copy->name = malloc(sizeof(char) * _strlen(name));
+		if (dog_copy->name)
+		{
+			dog_copy->owner = malloc(sizeof(char) * _strlen(owner));
+			if (dog_copy->owner)
+			{
+				_strcpy(dog_copy->name, name);
+				dog_copy->age = age;
+				_strcpy(dog_copy->owner, owner);
+				return (dog_copy);
+			}
+			else
+			{
+				free(dog_copy->name);
+				free(dog_copy);
+			}
+		}
+		else
+		{
+			free(dog_copy);
+		}
 	}
-	temp->name = malloc(_strlen(name) * sizeof(temp->name));
-	if (temp == NULL)
-		return (NULL);
-	for (count = 0; count < _strlen(name); count++)
-		temp->name[count] = name[count];
-
-	temp->age = age;
-	temp->owner = malloc(_strlen(owner) * sizeof(temp->owner));
-	if (temp == NULL)
-		return (NULL);
-	for (count = 0; count < _strlen(owner); count++)
-		temp->owner[count] = owner[count];
-	return (temp);
+	return (NULL);
 }
