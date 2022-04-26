@@ -1,53 +1,47 @@
 #include "lists.h"
 
 /**
- * insert_nodeint_at_index - insert a new node at a given position
+ * delete_nodeint_at_index - delete a node at a given position
  * @head: pointer to head pointer of linked list
- * @idx: index to insert new node
- * @n: new node's data
- * Return: address of new node, or NULL if failed
+ * @index: index to delete node
+ * Return: 1 if succeeded, or -1 if failed
  */
 
-listint_t *insert_nodeint_at_index(listint_t **head, unsigned int idx, int n)
+int delete_nodeint_at_index(listint_t **head, unsigned int index)
 {
 
 	unsigned int i = 0;
-	listint_t *new_node, *tmp;
+	listint_t *tmp, *tmp2;
 
-	/* account for empty pointer */
-	if (head == NULL)
-		return (NULL);
+	/* account for empty list */
+	if (*head == NULL)
+		return (-1);
 
-	/* malloc and set values for new node */
-	new_node = malloc(sizeof(listint_t));
-	if (new_node == NULL)
-		return (NULL);
-	new_node->n = n;
+	tmp = *head;
 
-	/* account for idx 0 */
-	if (idx == 0)
+	/* account for deleting beginning node */
+	if (index == 0)
 	{
-		new_node->next = *head;
-		*head = new_node;
-		return (new_node);
+		*head = tmp->next;
+		free(tmp);
+		return (1);
 	}
 
-	/* iterate to 1 before nth index to insert */
-	tmp = *head;
-	while (i < (idx - 1))
+	/* iterate tmp to idx prior to idx we want to delete */
+	while (i < (index - 1) && tmp != NULL)
 	{
 		tmp = tmp->next;
 		i++;
-
-		if (tmp == NULL) /* account for idx out of range */
-		{
-			free(new_node);
-			return (NULL);
-		}
 	}
 
-	/* link into list */
-	new_node->next = tmp->next;
-	tmp->next = new_node;
-	return (new_node);
+	/* account for idx out of range: don't delete and return */
+	if (i != (index - 1) || tmp->next == NULL)
+		return (-1);
+
+	/* link prior idx before delete */
+	tmp2 = tmp->next;
+	tmp->next = (tmp->next)->next;
+	free(tmp2);
+
+	return (1);
 }
