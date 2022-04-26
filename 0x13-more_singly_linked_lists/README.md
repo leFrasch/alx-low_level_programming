@@ -1,0 +1,1 @@
+More in singly linked list
